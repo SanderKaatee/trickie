@@ -26,7 +26,7 @@
       </form>
     </div>
     {% elif trickie.result.value == 'WIN' %}
-    <p class="result-message win">The requester won €{{ "%.2f"|format(trickie.amount_cents*2/100) }}! The amount was paid by us!</p>
+    <p class="result-message win">You won €{{ "%.2f"|format(trickie.amount_cents*1/100) }}! The amount was paid by us to the requester!</p>
     <p class="status-paid">✅ Already settled</p>
     {% elif trickie.result.value == 'LOSE' %}
     <p class="result-message lose">The wheel landed on LOSE. The original amount was paid by the loser.</p>
