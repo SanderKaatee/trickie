@@ -1,0 +1,55 @@
+{% extends "_base.html" %}
+
+{% block content %}
+<div class="request-container">
+  <div class="card request-card">
+    <h2 id="requestHeading">
+      {% if trickie.result.value == 'PENDING' %}
+        {{ trickie.creator_name }} has requested money from you!
+      {% elif trickie.result.value == 'WIN' %}
+        🎉 This Trickie was WON! 🎉
+      {% elif trickie.result.value == 'LOSE' %}
+        😢 This Trickie was lost
+      {% elif trickie.result.value == 'NORMAL' %}
+        ✅ This Trickie has been paid
+      {% endif %}
+    </h2>
+    
+    <p class="request-description">For: {{ trickie.description }}</p>
+    <p class="request-amount">€{{ "%.2f"|format(trickie.amount_cents/100) }}</p>
+    
+    {% if trickie.result.value == 'PENDING' %}
+    <div class="button-group">
+      <button class="btn btn-primary" onclick="spin('{{ trickie.slug }}')">Double or Nothing!</button>
+      <form action="/pay/{{ trickie.slug }}" method="POST">
+        <button type="submit" class="btn btn-secondary">Just Pay</button>
+      </form>
+    </div>
+    {% elif trickie.result.value == 'WIN' %}
+    <p class="result-message win">The requester won €{{ "%.2f"|format(trickie.amount_cents*2/100) }}! The amount was paid by us!</p>
+    <p class="status-paid">✅ Already settled</p>
+    {% elif trickie.result.value == 'LOSE' %}
+    <p class="result-message lose">The wheel landed on LOSE. The original amount was paid by the loser.</p>
+    <p class="status-paid">✅ Already paid</p>
+    {% elif trickie.result.value == 'NORMAL' %}
+    <p class="result-message">Paid without playing Double or Nothing</p>
+    <p class="status-paid">✅ Already paid</p>
+    {% endif %}
+  </div>
+</div>
+
+<!-- Wheel Modal -->
+<div id="wheelModal" class="modal">
+  <div class="modal-content">
+    <div class="wheel-container">
+      <div class="wheel-pointer"></div>
+      <canvas id="wheel" width="400" height="400"></canvas>
+      <div class="tap-overlay">Tap to spin!</div>
+    </div>
+  </div>
+</div>
+
+<script src="/static/js/wheel.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1/dist/confetti.browser.min.js"></script>
+<script src="/static/js/confetti.js"></script>
+{% endblock %}

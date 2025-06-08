@@ -1,0 +1,103 @@
+{% extends "_base.html" %}
+
+{% block content %}
+<div class="result-container">
+  {% if trickie.result.value == 'WIN' %}
+  <div class="win-screen">
+    <div class="win-content">
+      <h1 class="win-title">🎉 YOU WON! 🎉</h1>
+      <div class="win-amount">€{{ "%.2f"|format(trickie.amount_cents*1/100) }}</div>
+      <p class="win-message">
+        Don't worry, this one is on us!<br>
+        <strong>{{ trickie.creator_name }}</strong> has received their money!<br>
+        Go celebrate together! 🥳
+      </p>
+      <a href="/r/{{ trickie.slug }}" class="btn btn-primary">Back to Trickie</a>
+    </div>
+  </div>
+  {% else %}
+  <div class="lose-screen">
+    <div class="lose-content">
+      <h1 class="lose-title">😢 You lost...</h1>
+      <div class="lose-amount">Pay €{{ "%.2f"|format(trickie.amount_cents*2/100) }}</div>
+      <p class="lose-message">
+        The wheel has spoken! Time to pay up.<br>
+        Better luck next time! 🍀
+      </p>
+      <form action="/pay/{{ trickie.slug }}" method="POST">
+        <button type="submit" class="btn btn-pay">Pay with iDEAL</button>
+      </form>
+      <a href="/r/{{ trickie.slug }}" class="btn btn-secondary">Maybe later</a>
+    </div>
+  </div>
+  {% endif %}
+</div>
+
+{% if trickie.result.value == 'WIN' %}
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1/dist/confetti.browser.min.js"></script>
+<script>
+// Epic confetti celebration
+function celebrate() {
+  // First burst
+  confetti({
+    particleCount: 100,
+    spread: 70,
+    origin: { y: 0.6 },
+    colors: ['#1e1b55', '#3ddfb2', '#ff5f87', '#ffce3d', '#31c0ff']
+  });
+  
+  // Side cannons
+  const end = Date.now() + 3000;
+  const colors = ['#1e1b55', '#3ddfb2', '#ff5f87', '#ffce3d', '#31c0ff'];
+  
+  (function frame() {
+    confetti({
+      particleCount: 2,
+      angle: 60,
+      spread: 55,
+      origin: { x: 0 },
+      colors: colors
+    });
+    confetti({
+      particleCount: 2,
+      angle: 120,
+      spread: 55,
+      origin: { x: 1 },
+      colors: colors
+    });
+
+    if (Date.now() < end) {
+      requestAnimationFrame(frame);
+    }
+  }());
+  
+  // Fireworks
+  setTimeout(() => {
+    const count = 200;
+    const defaults = {
+      origin: { y: 0.7 },
+      colors: colors
+    };
+
+    function fire(particleRatio, opts) {
+      confetti({
+        ...defaults,
+        ...opts,
+        particleCount: Math.floor(count * particleRatio)
+      });
+    }
+
+    fire(0.25, { spread: 26, startVelocity: 55 });
+    fire(0.2, { spread: 60 });
+    fire(0.35, { spread: 100, decay: 0.91, scalar: 0.8 });
+    fire(0.1, { spread: 120, startVelocity: 25, decay: 0.92, scalar: 1.2 });
+    fire(0.1, { spread: 120, startVelocity: 45 });
+  }, 1000);
+}
+
+// Start celebration on load
+celebrate();
+</script>
+{% endif %}
+
+{% endblock %}

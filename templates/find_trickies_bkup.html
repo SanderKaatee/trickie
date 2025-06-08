@@ -1,0 +1,109 @@
+<!-- {% extends "_base.html" %}
+
+{% block title %}Find Your Trickies{% endblock %}
+
+{% block content %}
+<main class="main-content">
+
+    <!-- Page header -------->
+    <header class="hero-section text-center">
+        <h1 class="hero-title">
+            <span class="dice-emoji">🔍</span>
+            Find&nbsp;Your&nbsp;Trickies
+        </h1>
+        <p class="hero-subtitle">
+            Lost your Trickie URL?  Just search by name below.
+        </p>
+    </header>
+
+    <!-- Search card -------->
+    <section class="card find-card">
+        <form method="POST" class="find-form">
+            <label class="visually-hidden" for="search-name">Your name</label>
+            <input
+                id="search-name"
+                class="find-input"
+                name="name"
+                placeholder="Enter your name…"
+                value="{{ search_name or '' }}"
+                required
+                autofocus
+            >
+            <button type="submit" class="btn btn-primary">Search</button>
+        </form>
+
+        {% if search_name and creators %}
+            <h2 class="results-title">
+                Found {{ creators|length }}
+                creator{{ 's' if creators|length != 1 else '' }}
+                matching “{{ search_name }}”
+            </h2>
+
+            {% for creator_name, creator_token in creators %}
+            {% set creator_slug = creator_name.lower().replace(' ', '-') + '-' + creator_token %}
+            <div class="creator-result">
+                <div class="creator-info">
+                    <h3>{{ creator_name }}</h3>
+                    <code class="creator-url">
+                        trickie.app/my-trickies/{{ creator_slug }}
+                    </code>
+                </div>
+                <div class="creator-actions">
+                    <a class="btn btn-primary"
+                       href="{{ url_for('creator_trickies', creator_slug=creator_slug) }}">
+                        View Trickies →
+                    </a>
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        onclick="copyUrl('{{ url_for('creator_trickies', creator_slug=creator_slug, _external=True) }}')">
+                        📋 Copy URL
+                    </button>
+                </div>
+            </div>
+            {% endfor %}
+        {% elif search_name %}
+            <p class="no-results">
+                😕 No Trickies found for “{{ search_name }}”.<br>
+                <span class="text-muted">
+                    Check the spelling or create your first Trickie!
+                </span>
+            </p>
+        {% else %}
+            <div class="tips">
+                <h3>💡 Pro tip</h3>
+                <p>
+                    Every new Trickie comes with a shareable URL:<br>
+                    <code>trickie.app/my-trickies/yourname-abc123</code>
+                </p>
+                <p>
+                    We also store them in your browser – hit
+                    <strong>“My Trickies”</strong> on the home page next time.
+                </p>
+            </div>
+        {% endif %}
+    </section>
+
+    <!-- Footer buttons ---->
+    <div class="button-group mt-2">
+        <a class="btn btn-secondary" href="{{ url_for('index') }}">← Back to Home</a>
+        <a class="btn btn-primary"    href="{{ url_for('name_step') }}">Create New Trickie</a>
+    </div>
+
+</main>
+
+<!-- Toast ---------------------------------------------------->
+<div id="toast" class="toast">URL copied!</div>
+
+<script>
+function copyUrl(url) {
+    navigator.clipboard.writeText(url).then(() => {
+        const toast = document.getElementById('toast');
+        toast.style.display = 'block';
+        setTimeout(() => toast.style.display = 'none', 2000);
+    });
+}
+</script>
+{% endblock %} -->
+
+

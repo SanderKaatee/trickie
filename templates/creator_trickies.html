@@ -1,0 +1,104 @@
+{% extends "_base.html" %}
+
+{% block title %}{{ creator_name }}'s Trickies{% endblock %}
+
+{% block content %}
+<main class="main-content">
+
+    <!-- ── Header ─────────────────────────────────────────── -->
+    <header class="hero-section text-center">
+        <h1>{{ creator_name }}'s Trickies</h1>
+    </header>
+
+    <!-- ── Share-URL bar ──────────────────────────────────── -->
+    <section class="url-share card mb-2">
+        <input  id="share-url"
+                class="url-display"
+                type="text"
+                readonly
+                value="{{ share_url }}">
+        <button class="btn btn-secondary url-copy"
+                onclick="copyUrl('{{ share_url }}')">
+            Copy
+        </button>
+        <p class="hint mt-1">Save this URL to always find your Trickies!</p>
+    </section>
+
+    <!-- ── Stats tiles ────────────────────────────────────── -->
+    <section class="stats-grid mb-3">
+        <div class="stat-card">
+            <span class="stat-value">{{ stats.total_trickies }}</span>
+            <span class="stat-label">Total Trickies</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-value">€{{ '%.2f'|format(stats.total_requested) }}</span>
+            <span class="stat-label">Total Requested</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-value">€{{ '%.2f'|format(stats.total_won) }}</span>
+            <span class="stat-label">Won from Gambling</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-value">{{ stats.total_lost }}</span>
+            <span class="stat-label">Gambles Lost</span>
+        </div>
+    </section>
+
+    <!-- ── Trickies list ──────────────────────────────────── -->
+    <section class="trickies-list">
+        <h2>Your Trickies</h2>
+
+        {% if trickies %}
+            {% for t in trickies %}
+            <div class="trickie-item card">
+                <div class="trickie-info">
+                    <h3 class="trickie-title">{{ t.title }}</h3>
+                    <p class="text-muted">
+                        €{{ '%.2f'|format(t.amount) }} &bull;
+                        Created {{ t.created|date('M d, Y') }}
+                    </p>
+                </div>
+
+                <span class="status-pill status-{{ t.status|lower }}">
+                    {{ t.status }}
+                </span>
+
+                <a  href="{{ url_for('view_trickie', trickie_id=t.id) }}"
+                    class="trickie-view">
+                    View
+                </a>
+
+                <button class="btn btn-tertiary"
+                        onclick="copyUrl('{{ url_for('view_trickie', trickie_id=t.id, _external=True) }}')">
+                    Copy Link
+                </button>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p class="text-center text-muted mt-2">
+                You haven’t created any Trickies yet.
+            </p>
+        {% endif %}
+    </section>
+
+    <!-- ── Action buttons ─────────────────────────────────── -->
+    <div class="button-group mt-3">
+        <a class="btn btn-primary"  href="{{ url_for('name_step') }}">Create New Trickie</a>
+        <a class="btn btn-secondary" href="{{ url_for('index') }}">Back to Home</a>
+    </div>
+
+</main>
+
+<!-- Global toast reused across pages -->
+<div id="toast" class="toast">URL copied!</div>
+
+<script>
+function copyUrl(url) {
+    navigator.clipboard.writeText(url).then(() => {
+        const toast = document.getElementById('toast');
+        toast.style.display = 'block';
+        setTimeout(() => toast.style.display = 'none', 2000);
+    });
+}
+</script>
+{% endblock %}

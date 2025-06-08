@@ -1,0 +1,59 @@
+{% extends "_base.html" %}
+
+{% block title %}Trickie - Double or Nothing!{% endblock %}
+
+{% block content %}
+<div class="hero-section">
+    <h1 class="hero-title">
+        <span class="dice-emoji">🎲</span> 
+        Welcome to Trickie
+    </h1>
+    <p class="hero-subtitle">
+        The payment request app where your friends can 
+        <span class="hl">double or nothing!</span>
+    </p>
+</div>
+
+<div class="action-cards">
+    <a href="{{ url_for('name_step') }}" class="action-card">
+        <div class="card-icon">💸</div>
+        <h2>Create a Trickie</h2>
+        <p>Request money with a twist - let your friends gamble!</p>
+        <span class="btn btn-primary">Get Started →</span>
+    </a>
+
+    {% if has_trickies %}
+    <a href="{{ url_for('my_trickies') }}" class="action-card">
+        <div class="card-icon">📊</div>
+        <h2>My Trickies</h2>
+        <p>View and manage all your payment requests</p>
+        <span class="btn btn-primary">View Trickies →</span>
+    </a>
+    {% else %}
+    <a href="{{ url_for('find_trickies') }}" class="action-card">
+        <div class="card-icon">🔍</div>
+        <h2>Find My Trickies</h2>
+        <p>Lost your Trickie link? Find it by your name!</p>
+        <span class="btn btn-secondary">Search →</span>
+    </a>
+    {% endif %}
+</div>
+
+<div class="how-it-works">
+    <h3>How it works</h3>
+    <div class="steps">
+        <div class="step-item">
+            <span class="step-number">1</span>
+            <p>Create a payment request</p>
+        </div>
+        <div class="step-item">
+            <span class="step-number">2</span>
+            <p>Your friend can pay normally or gamble</p>
+        </div>
+        <div class="step-item">
+            <span class="step-number">3</span>
+            <p>Win = double payment, Lose = no payment!</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

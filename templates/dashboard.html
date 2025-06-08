@@ -1,0 +1,120 @@
+{% extends "_base.html" %}
+
+{% block title %}Dashboard - Trickie{% endblock %}
+
+{% block content %}
+<div class="card dashboard-card">
+    <h1>Trickie by {{ trickie.creator_name }}</h1>
+    
+    <div class="dashboard-info">
+        <p>For: {{ trickie.description }}</p>
+        <p>Original amount: €{{ "%.2f"|format(trickie.amount_cents / 100) }}</p>
+        <p>You chose: {% if trickie.wants_double %}Double or Nothing{% else %}Normal request{% endif %}</p>
+    </div>
+    
+    <span id="status-badge" class="status-badge status-{{ trickie.result.value.lower() }}">
+        {{ trickie.result.value }}
+    </span>
+    
+    <div id="result-section">
+        {% if trickie.result.value == 'PENDING' %}
+            <p>Waiting for recipient's decision...</p>
+            <div class="share-section">
+                <h3>Share this payment request:</h3>
+                <button class="btn btn-primary" onclick="copyLink()">
+                    📋 Copy Payment Link
+                </button>
+            </div>
+        {% elif trickie.result.value == 'WIN' %}
+            <p class="result-message win">🎉 Your friend won! We paid you €{{ "%.2f"|format(trickie.amount_cents * / 100) }}, enjoy!</p>
+        {% elif trickie.result.value == 'LOSE' %}
+            <p class="result-message lose">😅 Better luck next time! Your friend lost the gamble.</p>
+        {% elif trickie.result.value == 'NORMAL' %}
+            <p class="result-message">✅ Payment request sent normally for €{{ "%.2f"|format(trickie.amount_cents / 100) }}</p>
+        {% endif %}
+        
+        {% if trickie.result.value != 'PENDING' %}
+            <button class="btn btn-secondary mt-1" onclick="copyLink()">
+                Copy payment link again
+            </button>
+        {% endif %}
+    </div>
+
+    <!-- New creator URL section -->
+    <div class="creator-url-section">
+        <div class="divider"></div>
+        <h3>📌 Save Your Trickie URL!</h3>
+        <p class="url-explanation">View all your Trickies anytime at:</p>
+        <div class="url-display">
+            <code id="creator-url">{{ creator_url }}</code>
+            <button class="btn-copy" onclick="copyCreatorUrl()">📋</button>
+        </div>
+        <div class="url-actions">
+            <a href="{{ url_for('creator_trickies', creator_slug=creator_slug) }}" 
+               class="btn btn-secondary btn-small">
+                View All My Trickies
+            </a>
+            <a href="{{ url_for('name_step') }}" 
+               class="btn btn-primary btn-small">
+                Create Another Trickie
+            </a>
+        </div>
+    </div>
+</div>
+
+<div id="toast" class="toast">
+    <span id="toast-message">Link copied!</span>
+</div>
+
+<script>
+// VSCode may show errors for Jinja2 syntax - ignore them
+const slug = {{ trickie.slug|tojson }};
+const paymentUrl = {{ url_for("request_page", slug=trickie.slug, _external=True)|tojson }};
+const creatorUrl = {{ creator_url|tojson }};
+let polling = {{ 'true' if trickie.result.value == 'PENDING' else 'false' }};
+
+function updateStatus() {
+    if (!polling) return;
+    
+    fetch(`/r/${slug}?json=1`)
+        .then(r => r.json())
+        .then(data => {
+            if (data.result !== 'PENDING') {
+                polling = false;
+                location.reload();
+            }
+        });
+}
+
+function copyLink() {
+    navigator.clipboard.writeText(paymentUrl).then(() => {
+        showToast('Payment link copied!');
+    });
+}
+
+function copyCreatorUrl() {
+    navigator.clipboard.writeText(creatorUrl).then(() => {
+        showToast('Your Trickie URL copied! Save it somewhere safe!');
+    });
+}
+
+function showToast(message) {
+    const toast = document.getElementById('toast');
+    const toastMessage = document.getElementById('toast-message');
+    toastMessage.textContent = message;
+    toast.style.display = 'block';
+    setTimeout(() => toast.style.display = 'none', 3000);
+}
+
+if (polling) {
+    setInterval(updateStatus, 5000);
+}
+
+// Show tip about saving the URL on first visit
+if ({{ 'true' if trickie.result.value == 'PENDING' else 'false' }}) {
+    setTimeout(() => {
+        showToast('💡 Tip: Save your Trickie URL to view all your payment requests!');
+    }, 2000);
+}
+</script>
+{% endblock %}

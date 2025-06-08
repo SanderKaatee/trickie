@@ -1,0 +1,26 @@
+{% extends "_base.html" %}
+{% block content %}
+<form class="step step--amount" method="POST">
+
+  <header class="step__header">
+    <a class="step__back" href="{{ url_for('name_step') }}">&#x2190;</a>
+  </header>
+
+  <h2 class="step__sentence">
+    Ask <span class="hl">everyone</span><br>
+    to pay me back
+    <input  class="step__number"
+            type="number" inputmode="decimal" pattern="\d*"
+            step="0.01" min="0.01"
+            name="amount" placeholder="€ 0" required>
+  </h2>
+
+  <!-- <label class="step__switch">
+    <span>Let your friends choose the amount</span>
+    <input type="checkbox" name="friends_choose">
+    <span class="slider"></span>
+  </label> -->
+
+  <button class="btn-primary step__next">Next</button>
+</form>
+{% endblock %}

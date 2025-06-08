@@ -1,0 +1,21 @@
+{% extends "_base.html" %}
+{% block content %}
+<form class="step step--desc" method="POST">
+
+  <header class="step__header">
+    <a class="step__back" href="{{ url_for('amount_step') }}">&#x2190;</a>
+  </header>
+
+  <h2 class="step__sentence">
+    What is it for?
+  </h2>
+
+  <textarea class="step__textarea"
+            name="description"
+            maxlength="140"
+            placeholder="Being your friend"
+            required></textarea>
+
+  <button class="btn-primary step__next">Generate link</button>
+</form>
+{% endblock %}

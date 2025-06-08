@@ -1,0 +1,13 @@
+{% extends "_base.html" %}
+
+{% block title %}My Trickies - Coming Soon{% endblock %}
+
+{% block content %}
+<div class="card text-center">
+    <div class="card-icon mb-1">🚧</div>
+    <h1 class="mb-1">Coming Soon!</h1>
+    <p class="mb-1">The ability to view and manage all your Trickies is under construction.</p>
+    <p class="text-muted mb-2">This feature will let you track all your payment requests, see their status, and manage your gambling history!</p>
+    <a href="{{ url_for('index') }}" class="btn btn-primary">Back to Home</a>
+</div>
+{% endblock %}
