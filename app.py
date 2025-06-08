@@ -181,18 +181,18 @@ def create_redirect():
 @app.route("/my-trickies")
 def my_trickies():
     """Redirect to user's trickies based on cookies"""
-    creator_tokens = json.loads(request.cookies.get('creator_tokens', '{}'))
+    # creator_tokens = json.loads(request.cookies.get('creator_tokens', '{}'))
     
-    if not creator_tokens:
-        return render_template("find_trickies.html")
+    # if not creator_tokens:
+    return render_template("find_trickies.html")
     
-    # If user has tokens, redirect to the first one
-    # In a real app, you might want to show a list to choose from
-    first_name = list(creator_tokens.keys())[0]
-    first_token = creator_tokens[first_name]
+    # # If user has tokens, redirect to the first one
+    # # In a real app, you might want to show a list to choose from
+    # first_name = list(creator_tokens.keys())[0]
+    # first_token = creator_tokens[first_name]
     
-    return redirect(url_for('creator_trickies', 
-                          creator_slug=f"{first_name.lower().replace(' ', '-')}-{first_token}"))
+    # return redirect(url_for('creator_trickies', 
+    #                       creator_slug=f"{first_name.lower().replace(' ', '-')}-{first_token}"))
 
 
 @app.route("/my-trickies/<creator_slug>")
