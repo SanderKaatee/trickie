@@ -26,7 +26,7 @@
                 </button>
             </div>
         {% elif trickie.result.value == 'WIN' %}
-            <p class="result-message win">🎉 Your friend won! We paid you €{{ "%.2f"|format(trickie.amount_cents * 100) }}, enjoy!</p>
+            <p class="result-message win">🎉 Your friend won! We paid you €{{ "%.2f"|format(trickie.amount_cents / 100) }}, enjoy!</p>
         {% elif trickie.result.value == 'LOSE' %}
             <p class="result-message lose">😅 Better luck next time! Your friend lost the gamble.</p>
         {% elif trickie.result.value == 'NORMAL' %}

@@ -1532,3 +1532,15 @@ body {
     font-style: italic;
     color: #777;
 }
+
+.site-credit {
+    margin: 2rem 0 -0.5rem;   /* space above, snug to the footer */
+    text-align: center;
+    font-size: 0.75rem;       /* small and unobtrusive */
+    color: #666;
+}
+
+.site-credit a {
+    color: inherit;           /* keeps link the same muted colour */
+    text-decoration: none;
+}
